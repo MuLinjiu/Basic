@@ -90,20 +90,22 @@ Statement *parsestatment(TokenScanner & scanner,string line){
             }
         }
         else if(token == "LET"){
-            Expression *exp = readE(scanner);
+            Expression *exp = parseExp(scanner);
+            if(((IdentifierExp*)(((CompoundExp*)exp)->getLHS()))->getName()=="LET"){
+                error("SYNTAX ERROR");
+                delete exp;
+            }
             if(exp->getType() != COMPOUND){
                 error("SYNTAX ERROR");
                 delete exp;
             }
-            else {
-                if(((CompoundExp*)exp)->getOp()!="="){
-                    error("SYNTAX ERROR");
-                    delete exp;
-                }
-                else if(((Expression*)(((CompoundExp*)exp)->getLHS()))->getType()!=IDENTIFIER){
-                    error("SYNTAX ERROR");
-                    delete exp;
-                }
+            if(((CompoundExp*)exp)->getOp()!="="){
+                error("SYNTAX ERROR");
+                delete exp;
+            }
+            if(((Expression*)(((CompoundExp*)exp)->getLHS()))->getType()!=IDENTIFIER){
+                error("SYNTAX ERROR");
+                delete exp;
             }
             return new LET(exp);
         }

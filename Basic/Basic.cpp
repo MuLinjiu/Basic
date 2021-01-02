@@ -30,7 +30,6 @@ void processLine(string line, Program & program, EvalState & state);
 int main() {
    EvalState state;
    Program program;
-   cout << "Stub implementation of BASIC" << endl;
    while (true) {
       try {
 
@@ -75,12 +74,12 @@ void processLine(string line, Program & program, EvalState & state) {
            }catch(ErrorException &a){
                if(a.getMessage() == "end")return;
                if(a.getMessage() == "zero"){
-                   error("DIVIDE BY ZERO");
+                   //error("DIVIDE BY ZERO");
                    cout<<"DIVIDE BY ZERO"<<endl;
                    return;
                }
                if(a.getMessage() == "goto"){
-                   error("LINE NUMBER ERROR");
+                   //error("LINE NUMBER ERROR");
                    cout<<"LINE NUMBER ERROR"<<endl;
                }else{
                    cout<<"VARIABLE NOT DEFINED"<<endl;
@@ -102,6 +101,7 @@ void processLine(string line, Program & program, EvalState & state) {
            }
            else {
                program.clear();
+               state.clear();
            }
        }
        else if(token == "QUIT"){

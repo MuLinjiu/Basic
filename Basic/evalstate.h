@@ -72,6 +72,9 @@ public:
  */
 
    bool isDefined(std::string var);
+   void clear(){
+       symbolTable.clear();
+   }
 
 private:
 

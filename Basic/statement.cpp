@@ -48,12 +48,12 @@ void END::execute(EvalState &state) {
 GOTO::GOTO(int a):linenumber(a){}
 GOTO::~GOTO() = default;
 void GOTO::execute(EvalState &state) {
-    error(integerToString(linenumber));//throw the exact number//存疑
+    error(integerToString(linenumber));//throw the exact number//
 }
 INPUT::INPUT(string &a):name(a) {}
 INPUT::~INPUT() noexcept {}
 void INPUT::execute(EvalState &state){
-    cout<<"?";
+    cout<<" ?";cout<<" ";
     string token;TokenScanner scanner;TokenType token_Type;
     scanner.ignoreWhitespace();
     scanner.ignoreComments();
@@ -68,11 +68,11 @@ void INPUT::execute(EvalState &state){
         token_Type = scanner.getTokenType(token);
         if(token !="-") {
             if (token_Type != NUMBER) {
-                cout << "INVALID NUMBER" << endl << "?";
+                cout << "INVALID NUMBER" << endl << " ? ";
                 continue;
             }
             if (scanner.hasMoreTokens()) {//后面不跟东西
-                cout << "INVALID NUMBER" << endl << "?";
+                cout << "INVALID NUMBER" << endl << " ? ";
                 continue;
             }
             try {
@@ -86,11 +86,11 @@ void INPUT::execute(EvalState &state){
                 token = scanner.nextToken();
                 token_Type = scanner.getTokenType(token);
                 if(token_Type!=NUMBER){
-                    cout<<"INVALID NUMBER"<<endl<<"?";
+                    cout<<"INVALID NUMBER"<<endl<<" ? ";
                     continue;
                 }
                 if(scanner.hasMoreTokens()){//后面不跟东西
-                    cout<<"INVALID NUMBER"<<endl<<"?";
+                    cout<<"INVALID NUMBER"<<endl<<" ? ";
                     continue;
                 }
                 try{

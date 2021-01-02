@@ -25,6 +25,7 @@ Program::~Program() {
 void Program::clear() {
     for(auto & it : maptable){
             delete it.second.exp;
+            it.second.exp = nullptr;
     }
     maptable.clear();
 }
