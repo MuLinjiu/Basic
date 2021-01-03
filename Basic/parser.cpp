@@ -71,6 +71,7 @@ Statement *parsestatment(TokenScanner & scanner,string line){
                     } else {
                         token = scanner.nextToken();
                         token_type = scanner.getTokenType(token);
+                        if(check(token)){error("SYNTAX ERROR");}
                         if (scanner.hasMoreTokens()) {
                             error("SYNTAX ERROR");
                         } else {
@@ -104,6 +105,7 @@ Statement *parsestatment(TokenScanner & scanner,string line){
                         } else {
                             token = scanner.nextToken();
                             token_type = scanner.getTokenType(token);
+                            if(check(token)){error("SYNTAX ERROR");}
                             if (token_type != WORD) {
                                 error("SYNTAX ERROR");
                             } else if (scanner.hasMoreTokens()) {
@@ -243,6 +245,6 @@ int precedence(string token) {
 bool check(const string & token){
     if(token == "LET" || token == "REM" || token == "PRINT" || token == "END" || token == "IF" ||
        token == "THEN" || token == "GOTO" || token == "RUN" || token == "LIST" || token == "CLEAR" ||
-       token == "QUIT" || token == "HELP") return true;
+       token == "QUIT" || token == "HELP" || token == "INPUT") return true;
     return false;
 }
