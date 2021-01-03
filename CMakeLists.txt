@@ -3,7 +3,7 @@ project(code)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(windows_for_make Basic/Basic.cpp
+add_executable(code Basic/Basic.cpp
         Basic/evalstate.h
         Basic/evalstate.cpp
         Basic/exp.h
