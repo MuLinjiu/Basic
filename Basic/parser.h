@@ -53,5 +53,5 @@ Expression *readT(TokenScanner & scanner);
  */
 
 int precedence(std::string token);
-
+bool check(const string & token);
 #endif

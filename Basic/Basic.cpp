@@ -65,94 +65,102 @@ void processLine(const string& line, Program & program, EvalState & state) {
    else return;
    token_type =scanner.getTokenType(token);
    if(token_type == WORD){
-       switch(token[0]){
-           case 'R':if(scanner.hasMoreTokens()){
-                   error("SYNTAX ERROR");
-               }
-               else try{
-                       program.my_run_programme(state);
-                   }catch(ErrorException &a){
-                       if(a.getMessage() == "end")return;
-                       if(a.getMessage() == "zero"){
-                           cout<<"DIVIDE BY ZERO"<<endl;
-                           return;
+       if(check(token)) {
+           switch (token[0]) {
+               case 'R':
+                   if (scanner.hasMoreTokens()) {
+                       error("SYNTAX ERROR");
+                   } else
+                       try {
+                           program.my_run_programme(state);
+                       } catch (ErrorException &a) {
+                           if (a.getMessage() == "end")return;
+                           if (a.getMessage() == "zero") {
+                               cout << "DIVIDE BY ZERO" << endl;
+                               return;
+                           }
+                           if (a.getMessage() == "goto") {
+                               cout << "LINE NUMBER ERROR" << endl;
+                           } else {
+                               cout << "VARIABLE NOT DEFINED" << endl;
+                               return;
+                           }
                        }
-                       if(a.getMessage() == "goto"){
-                           cout<<"LINE NUMBER ERROR"<<endl;
-                       }else{
-                           cout<<"VARIABLE NOT DEFINED"<<endl;
+                   return;
+               case 'L':
+                   if (token == "LIST") {
+                       if (scanner.hasMoreTokens()) {
+                           cout << "SYNTAX ERROR\n";
                            return;
-                       }
+                       } else program.my_show_list();
                    }
-               return;
-           case 'L':if(token == "LIST"){
-                   if(scanner.hasMoreTokens()){
-                       cout<<"SYNTAX ERROR\n";
-                       return;
-                   }
-                   else program.my_show_list();
-               }
-               case 'P' :case'I':
+               case 'P' :
+               case 'I':
                    scanner.setInput(line);
-               Statement *sta;
-               if(!scanner.hasMoreTokens()){
-                   cout<<"SYNTAX ERROR\n";
-                   return;
-               }
-               else{
-                   try{
-                       sta = parsestatment(scanner,line);
-                   }catch(...){
-                       cout<<"SYNTAX ERROR\n";
-                       delete sta;
+                   Statement *sta;
+                   if (!scanner.hasMoreTokens()) {
+                       cout << "SYNTAX ERROR\n";
                        return;
-                   }
-                   try{
-                       sta->execute(state);
-                   }catch(ErrorException &a){
-                       if(a.getMessage()=="zero"){
-                           //error("DIVIDE BY ZERO");
-                           cout<<"DIVIDE BY ZERO\n";
+                   } else {
+                       try {
+                           sta = parsestatment(scanner, line);
+                       } catch (...) {
+                           cout << "SYNTAX ERROR\n";
                            delete sta;
                            return;
                        }
-                       else {
-                           //error("VARIABLE NOT DEFINED");
-                           cout<<"VARIABLE NOT DEFINED\n";
-                           delete sta;
-                           return;
+                       try {
+                           sta->execute(state);
+                       } catch (ErrorException &a) {
+                           if (a.getMessage() == "zero") {
+                               //error("DIVIDE BY ZERO");
+                               cout << "DIVIDE BY ZERO\n";
+                               delete sta;
+                               return;
+                           } else {
+                               //error("VARIABLE NOT DEFINED");
+                               cout << "VARIABLE NOT DEFINED\n";
+                               delete sta;
+                               return;
+                           }
                        }
+                       delete sta;
                    }
-                   delete sta;
-               }
-               return;
-           case 'C':if(scanner.hasMoreTokens()){
-                   cout<<"SYNTAX ERROR\n";
                    return;
-               }
-               else {
-                   program.clear();
-                   state.clear();//不能少！
-               }
-               return;
-           case'Q':if(scanner.hasMoreTokens()){
-                   cout<<"SYNTAX ERROR\n";
+               case 'C':
+                   if (scanner.hasMoreTokens()) {
+                       cout << "SYNTAX ERROR\n";
+                       return;
+                   } else {
+                       program.clear();
+                       state.clear();//不能少！
+                   }
                    return;
-               }
-               else exit(0);
-           case 'H':if(scanner.hasMoreTokens()){
-                   cout<<"SYNTAX ERROR\n";
+               case 'Q':
+                   if (scanner.hasMoreTokens()) {
+                       cout << "SYNTAX ERROR\n";
+                       return;
+                   } else exit(0);
+               case 'H':
+                   if (scanner.hasMoreTokens()) {
+                       cout << "SYNTAX ERROR\n";
+                       return;
+                   } else {
+                       cout << "RUN : run the program from the lowest line number\n";
+                       cout << "LIST : show the command lists in numerical sequence\n";
+                       cout << "CLEAR : delete all of the command above \n";
+                       cout << "QUIT : exit from the program\n";
+                       cout << "HAVE FUN ! \n";
+                   }
                    return;
-               }
-               else {
-                   cout<<"RUN : run the program from the lowest line number\n";
-                   cout<<"LIST : show the command lists in numerical sequence\n";
-                   cout<<"CLEAR : delete all of the command above \n";
-                   cout<<"QUIT : exit from the program\n";
-                   cout<<"HAVE FUN ! \n";
-               }
-               return;
-           default:cout<<"SYNTAX ERROR\n";return;
+               default:
+                   cout << "SYNTAX ERROR\n";
+                   return;
+           }
+       }
+       else {
+           cout << "SYNTAX ERROR\n";
+           return;
        }
    }
    else if(token_type == NUMBER){

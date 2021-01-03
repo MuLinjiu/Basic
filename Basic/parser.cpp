@@ -38,150 +38,147 @@ Statement *parsestatment(TokenScanner & scanner,string line){
     if(token_type != WORD){
         error("SYNTAX ERROR");
     }
-    else{
-        switch (token[0]){
-            case 'R':if(!scanner.hasMoreTokens()){
-                    error("SYNTAX ERROR");
-                }
-                else return new REM();
-            case 'E':if(scanner.hasMoreTokens()){
-                    error("SYNTAX ERROR");
-                }
-                else return new END();
-            case'P':  if(!scanner.hasMoreTokens()){
-                    error("SYNTAX ERROR");
-                }
-                else {
-                    Expression *exp = parseExp(scanner);
-                    if(exp->getType() == COMPOUND){
-                        if(((CompoundExp*)exp)->getOp()=="="){
+    else {
+        if (check(token)){
+            switch (token[0]) {
+                case 'R':
+                    if (!scanner.hasMoreTokens()) {
+                        error("SYNTAX ERROR");
+                    } else return new REM();
+                case 'E':
+                    if (scanner.hasMoreTokens()) {
+                        error("SYNTAX ERROR");
+                    } else return new END();
+                case 'P':
+                    if (!scanner.hasMoreTokens()) {
+                        error("SYNTAX ERROR");
+                    } else {
+                        Expression *exp = parseExp(scanner);
+                        if (exp->getType() == COMPOUND) {
+                            if (((CompoundExp *) exp)->getOp() == "=") {
+                                error("SYNTAX ERROR");
+                                delete exp;
+                            }
+                        } else if (scanner.hasMoreTokens()) {
                             error("SYNTAX ERROR");
                             delete exp;
                         }
+                        return new PRINT(exp);
                     }
-                    else if(scanner.hasMoreTokens()){
+                case 'G':
+                    if (!scanner.hasMoreTokens()) {
+                        error("SYNTAX ERROR");
+                    } else {
+                        token = scanner.nextToken();
+                        token_type = scanner.getTokenType(token);
+                        if (scanner.hasMoreTokens()) {
+                            error("SYNTAX ERROR");
+                        } else {
+                            if (token_type != NUMBER) {
+                                error("SYNTAX ERROR");
+                            }
+                            int linenumbe = stringToInteger(token);
+                            return new GOTO(linenumbe);
+                        }
+                    }
+                case 'L': {
+                    Expression *exp = parseExp(scanner);
+                    if (exp->getType() != COMPOUND) {
                         error("SYNTAX ERROR");
                         delete exp;
                     }
-                    return new PRINT(exp);
-                }
-            case'G':if(!scanner.hasMoreTokens()){
-                    error("SYNTAX ERROR");
-                }
-                else {
-                    token = scanner.nextToken();
-                    token_type = scanner.getTokenType(token);
-                    if(scanner.hasMoreTokens()){
+                    if (((CompoundExp *) exp)->getOp() != "=") {
                         error("SYNTAX ERROR");
+                        delete exp;
                     }
-                    else {
-                        if(token_type != NUMBER){
-                            error("SYNTAX ERROR");
-                        }
-                        int linenumbe = stringToInteger(token);
-                        return new GOTO(linenumbe);
-                    }
-                }
-            case 'L': {
-                Expression *exp = parseExp(scanner);
-                if (((IdentifierExp *) (((CompoundExp *) exp)->getLHS()))->getName() == "LET") {
-                    error("SYNTAX ERROR");
-                    delete exp;
-                }//DEBUG
-                if (exp->getType() != COMPOUND) {
-                    error("SYNTAX ERROR");
-                    delete exp;
-                }
-                if (((CompoundExp *) exp)->getOp() != "=") {
-                    error("SYNTAX ERROR");
-                    delete exp;
-                }
-                if (((Expression *) (((CompoundExp *) exp)->getLHS()))->getType() != IDENTIFIER) {
-                    error("SYNTAX ERROR");
-                    delete exp;
-                }
-                return new LET(exp);
-            }
-            case 'I': {
-                if(token == "INPUT"){
-                    if(!scanner.hasMoreTokens()){
+                    if (((Expression *) (((CompoundExp *) exp)->getLHS()))->getType() != IDENTIFIER) {
                         error("SYNTAX ERROR");
+                        delete exp;
                     }
-                    else {
-                        token = scanner.nextToken();
-                        token_type = scanner.getTokenType(token);
-                        if(token_type != WORD){
-                            error("SYNTAX ERROR1");
-                        }
-                        else if(scanner.hasMoreTokens()){
-                            error("SYNTAX ERROR2");
-                        }
-                        return new INPUT(token);
-                    }
+                    return new LET(exp);
                 }
-                else if (token == "IF") {
-                    Expression *a, *b;
-                    a = readE(scanner);
-                    token = scanner.nextToken();
-                    if (line.find('=') == string::npos) {//借鉴赵一龙，即end();
-                        //a = readE(scanner);
-                        string tmp = token;
-                        if (token != "<" && token != ">" && token != "=") {
+                case 'I': {
+                    if (token == "INPUT") {
+                        if (!scanner.hasMoreTokens()) {
                             error("SYNTAX ERROR");
-                            delete a;
-                        }
-                        b = readE(scanner);
-                        token = scanner.nextToken();
-                        if (token != "THEN") {
-                            error("SYNTAX ERROR");
-                            delete a;
-                            delete b;
                         } else {
-                            if (!scanner.hasMoreTokens()) {
+                            token = scanner.nextToken();
+                            token_type = scanner.getTokenType(token);
+                            if (token_type != WORD) {
+                                error("SYNTAX ERROR1");
+                            } else if (scanner.hasMoreTokens()) {
+                                error("SYNTAX ERROR2");
+                            }
+                            return new INPUT(token);
+                        }
+                    } else if (token == "IF") {
+                        Expression *a, *b;
+                        a = readE(scanner);
+                        token = scanner.nextToken();
+                        if (line.find('=') == string::npos) {//借鉴赵一龙，即end();
+                            //a = readE(scanner);
+                            string tmp = token;
+                            if (token != "<" && token != ">" && token != "=") {
+                                error("SYNTAX ERROR");
+                                delete a;
+                            }
+                            b = readE(scanner);
+                            token = scanner.nextToken();
+                            if (token != "THEN") {
                                 error("SYNTAX ERROR");
                                 delete a;
                                 delete b;
                             } else {
-                                token = scanner.nextToken();
-                                token_type = scanner.getTokenType(token);
-                                if (token_type != NUMBER) {
+                                if (!scanner.hasMoreTokens()) {
                                     error("SYNTAX ERROR");
                                     delete a;
                                     delete b;
+                                } else {
+                                    token = scanner.nextToken();
+                                    token_type = scanner.getTokenType(token);
+                                    if (token_type != NUMBER) {
+                                        error("SYNTAX ERROR");
+                                        delete a;
+                                        delete b;
+                                    }
+                                    GOTO *goto1 = new GOTO(stringToInteger(token));
+                                    return new IF(a, tmp, b, goto1);
                                 }
-                                GOTO *goto1 = new GOTO(stringToInteger(token));
-                                return new IF(a, tmp, b, goto1);
                             }
-                        }
-                    } else {
-                        string tmp = "=";
-                        string newa, newb;
-                        scanner.setInput(line);
-                        token = scanner.nextToken();
-                        token = scanner.nextToken();
-                        while (scanner.hasMoreTokens()) {
+                        } else {
+                            string tmp = "=";
+                            string newa, newb;
+                            scanner.setInput(line);
                             token = scanner.nextToken();
-                            if (token == "=")break;
-                            newa += (token + " ");
+                            token = scanner.nextToken();
+                            while (scanner.hasMoreTokens()) {
+                                token = scanner.nextToken();
+                                if (token == "=")break;
+                                newa += (token + " ");
+                            }
+                            b = readE(scanner);
+                            token = scanner.nextToken();
+                            if (token != "THEN") {
+                                error("SYNTAX ERROR");
+                            }
+                            token = scanner.nextToken();
+                            token_type = scanner.getTokenType(token);
+                            if (token_type != NUMBER) {
+                                error("SYNTAX ERROR");
+                            }
+                            GOTO *goto_ = new GOTO(stringToInteger(token));
+                            scanner.setInput(newa);
+                            a = readE(scanner);
+                            return new IF(a, tmp, b, goto_);
                         }
-                        b = readE(scanner);
-                        token = scanner.nextToken();
-                        if (token != "THEN") {
-                            error("SYNTAX ERROR");
-                        }
-                        token = scanner.nextToken();
-                        token_type = scanner.getTokenType(token);
-                        if (token_type != NUMBER) {
-                            error("SYNTAX ERROR");
-                        }
-                        GOTO *goto_ = new GOTO(stringToInteger(token));
-                        scanner.setInput(newa);
-                        a = readE(scanner);
-                        return new IF(a, tmp, b, goto_);
                     }
                 }
+                default:
+                    error("SYNTAX ERROR");
             }
-            default:error("SYNTAX ERROR");
+            }
+        else {
+            error("SYNTAX ERROR");
         }
         }
 }
@@ -242,4 +239,10 @@ int precedence(string token) {
    if (token == "+" || token == "-") return 2;
    if (token == "*" || token == "/") return 3;
    return 0;
+}
+bool check(const string & token){
+    if(token == "LET" || token == "REM" || token == "PRINT" || token == "END" || token == "IF" ||
+       token == "THEN" || token == "GOTO" || token == "RUN" || token == "LIST" || token == "CLEAR" ||
+       token == "QUIT" || token == "HELP") return true;
+    return false;
 }
