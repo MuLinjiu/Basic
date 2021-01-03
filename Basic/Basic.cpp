@@ -93,8 +93,8 @@ void processLine(const string& line, Program & program, EvalState & state) {
                            cout << "SYNTAX ERROR\n";
                            return;
                        } else program.my_show_list();
+                       return;
                    }
-                   return;
                case 'P' :
                case 'I':
                    scanner.setInput(line);
