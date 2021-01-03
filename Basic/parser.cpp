@@ -94,7 +94,7 @@ Statement *parsestatment(TokenScanner & scanner,string line){
             if(((IdentifierExp*)(((CompoundExp*)exp)->getLHS()))->getName()=="LET"){
                 error("SYNTAX ERROR");
                 delete exp;
-            }
+            }//DEBUG
             if(exp->getType() != COMPOUND){
                 error("SYNTAX ERROR");
                 delete exp;
