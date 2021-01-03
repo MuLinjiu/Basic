@@ -94,6 +94,7 @@ void processLine(const string& line, Program & program, EvalState & state) {
                            return;
                        } else program.my_show_list();
                    }
+                   return;
                case 'P' :
                case 'I':
                    scanner.setInput(line);
