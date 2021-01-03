@@ -105,9 +105,9 @@ Statement *parsestatment(TokenScanner & scanner,string line){
                             token = scanner.nextToken();
                             token_type = scanner.getTokenType(token);
                             if (token_type != WORD) {
-                                error("SYNTAX ERROR1");
+                                error("SYNTAX ERROR");
                             } else if (scanner.hasMoreTokens()) {
-                                error("SYNTAX ERROR2");
+                                error("SYNTAX ERROR");
                             }
                             return new INPUT(token);
                         }

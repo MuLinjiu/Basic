@@ -42,7 +42,7 @@ void Program::addSourceLine(int lineNumber, string line1) {
 }
 
 void Program::removeSourceLine(int lineNumber) {
-    if(!this->myfind(lineNumber))error("SYNTAX ERROR(cannot find the line)");
+    if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
         auto it = maptable.find(lineNumber);
         delete it->second.exp;
@@ -51,7 +51,7 @@ void Program::removeSourceLine(int lineNumber) {
 }
 
 string Program::getSourceLine(int lineNumber) {
-    if(!this->myfind(lineNumber))error("SYNTAX ERROR(cannot find the line)");
+    if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
         auto it = maptable.find(lineNumber);
         return(it->second.information);
@@ -59,7 +59,7 @@ string Program::getSourceLine(int lineNumber) {
 }
 
 void Program::setParsedStatement(int lineNumber, Statement *stmt) {
-    if(!this->myfind(lineNumber))error("SYNTAX ERROR(cannot find the line)");
+    if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
         auto it = maptable.find(lineNumber);
         delete it->second.exp;
@@ -68,7 +68,7 @@ void Program::setParsedStatement(int lineNumber, Statement *stmt) {
 }
 
 Statement *Program::getParsedStatement(int lineNumber) {
-    if(!this->myfind(lineNumber))error("SYNTAX ERROR(cannot find the line)");
+    if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
         auto it = maptable.find(lineNumber);
         return it->second.exp;
@@ -76,7 +76,7 @@ Statement *Program::getParsedStatement(int lineNumber) {
 }
 
 int Program::getFirstLineNumber() {
-    if(maptable.empty())error("SYNTAX ERROR(dont have first line)");
+    if(maptable.empty())error("SYNTAX ERROR");
    auto it = maptable.begin();
    return it->first;
 }
@@ -84,7 +84,7 @@ int Program::getNextLineNumber(int lineNumber) {
    for(auto & it : maptable){
        if(it.first > lineNumber)return it.first;
    }
-   error("SYNTAX ERROR dont have next line");
+   error("SYNTAX ERROR");
 }
 bool Program::myfind(int a){
     for(auto & it : maptable){
