@@ -107,7 +107,7 @@ void processLine(const string& line, Program & program, EvalState & state) {
                            sta = parsestatment(scanner, line);
                        } catch (...) {
                            cout << "SYNTAX ERROR\n";
-                           delete sta;
+                           //delete sta;
                            return;
                        }
                        try {

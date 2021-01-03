@@ -97,8 +97,8 @@ Statement *parsestatment(TokenScanner & scanner,string line){
                         delete exp;
                     }
                     if(check(((IdentifierExp *)(((CompoundExp *)exp)->getLHS()))->getName())){
-                        delete exp;
                         error("SYNTAX ERROR");
+                        delete exp;
                     }
                     return new LET(exp);
                 }
