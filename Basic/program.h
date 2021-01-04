@@ -138,7 +138,7 @@ public:
     bool myfind(int a);
 private:
     struct line{
-        string information = "";
+        string information;
         Statement *exp = nullptr;
         line(string &a,Statement *b){
             information = a;
@@ -147,6 +147,7 @@ private:
         line(string &a){
             information = a;
         }
+        line(){};
     };
     map<int,line>maptable;
 // Fill this in with whatever types and instance variables you need

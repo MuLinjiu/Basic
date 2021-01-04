@@ -35,17 +35,15 @@ void Program::addSourceLine(int lineNumber, string line1) {
         maptable.insert(make_pair(lineNumber,line(line1)));
     }
     else {
-        auto it = maptable.find(lineNumber);
-        it->second.information = line1;
-        if(it->second.exp!=nullptr)it->second.exp = nullptr;
+        maptable[lineNumber].information = line1 ;
+        if(maptable[lineNumber].exp!=nullptr)maptable[lineNumber].exp=nullptr ;
     }
 }
 
 void Program::removeSourceLine(int lineNumber) {
     if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
-        auto it = maptable.find(lineNumber);
-        delete it->second.exp;
+        delete maptable[lineNumber].exp;
         maptable.erase(lineNumber);
     }
 }
@@ -53,25 +51,23 @@ void Program::removeSourceLine(int lineNumber) {
 string Program::getSourceLine(int lineNumber) {
     if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
-        auto it = maptable.find(lineNumber);
-        return(it->second.information);
+        return maptable[lineNumber].information;
     }
 }
 
 void Program::setParsedStatement(int lineNumber, Statement *stmt) {
     if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
-        auto it = maptable.find(lineNumber);
-        delete it->second.exp;
-        it->second.exp = stmt;
+
+        delete maptable[lineNumber].exp;
+        maptable[lineNumber].exp = stmt;
     }
 }
 
 Statement *Program::getParsedStatement(int lineNumber) {
     if(!this->myfind(lineNumber))error("SYNTAX ERROR");
     else{
-        auto it = maptable.find(lineNumber);
-        return it->second.exp;
+        return maptable[lineNumber].exp;
     }
 }
 
